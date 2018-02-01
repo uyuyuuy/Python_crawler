@@ -1,26 +1,11 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys, io, os, bs4, requests, re, time, threading
 
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') #改变标准输出的默认编码
 
-#创建下载目录
-# os.mkdir('html',0o777)
-# os.mkdir('images',0o777)
-# os.mkdir('css',0o777)
-# os.mkdir('javascript',0o777)
 
-# 首页地址
-home_url = 'http://www.runoob.com'
-web_url = 'http://www.runoob.com/nodejs/nodejs-tutorial.html'
-
-
-# image = re.findall(r'(<img.*>)', home_res.text)
-# css = re.findall(r'(<link\s+rel="stylesheet".*>)', home_res.text)
-# js = re.findall(r'(<script\s+.*></script>)', home_res.text)
-
-
-index = '1'
 # 抓取页面内容函数
 def down_html(web_url):
     global index
@@ -153,8 +138,32 @@ def create_html_file(file_name, content):
 #     index_file.close()
 #     print('End: contents')
 
-down_html(web_url)
 
+
+
+
+
+
+
+
+
+
+
+
+
+#创建目录
+if not os.path.isdir('html'):
+    os.mkdir('html',0o777)
+if not os.path.isdir('files'):
+    os.mkdir('files',0o777)
+
+# 首页地址
+home_url = 'http://www.runoob.com'
+web_url = 'http://www.runoob.com/nodejs/nodejs-tutorial.html'
+
+index = '1'
+
+down_html(web_url)
 
 sys.exit('Exit')
 
