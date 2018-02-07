@@ -7,7 +7,7 @@ import sys, io, os, bs4, requests, re, time, threading
 
 
 # 抓取页面内容函数
-def down_html(web_url):
+def down_html(web_url, next_page_tag):
     global index
     # 获取页面内容
     web_res = requests.get(web_url)
@@ -17,6 +17,7 @@ def down_html(web_url):
         web_res.raise_for_status()
     except Exception as err:
         print('Error:' + err)
+        sys.exit('Over')
 
 
     html_text = web_res.text
@@ -106,10 +107,10 @@ def down_html(web_url):
 
     # 下一页
     web_content = bs4.BeautifulSoup(html_text, 'html.parser')
-    next_page_obj = web_content.select(".next-design-link a")
+    next_page_obj = web_content.select(next_page_tag)
     if next_page_obj:
         next_page_url = next_page_obj[0].get('href')
-        down_html(next_page_url)
+        down_html(next_page_url, next_page_tag)
     else:
         for thread in thread_list:
             thread.join()
@@ -120,6 +121,9 @@ def down_html(web_url):
 
 # 生成文件（二进制流写入）
 def create_html_file(file_name, content):
+    file_name_list = file_name.split('.')
+    if file_name_list[-1] != 'html':
+        file_name += '.html'
     web_file = open(os.path.join('.', 'html', file_name), 'wb')
     web_file.write(content)
     web_file.close()
@@ -141,16 +145,6 @@ def create_html_file(file_name, content):
 
 
 
-
-
-
-
-
-
-
-
-
-
 #创建目录
 if not os.path.isdir('html'):
     os.mkdir('html',0o777)
@@ -160,10 +154,10 @@ if not os.path.isdir('files'):
 # 首页地址
 home_url = 'http://www.runoob.com'
 web_url = 'http://www.runoob.com/nodejs/nodejs-tutorial.html'
-
+next_page_tag = ".next-design-link a"
 index = '1'
 
-down_html(web_url)
+down_html(web_url, next_page_tag)
 
 sys.exit('Exit')
 
