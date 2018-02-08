@@ -87,9 +87,9 @@ def down_html(web_url, next_page_tag):
 
 
     # 处理目录
-    contentsObj = html_bs.select('#leftcolumn a')
-    for contents in contentsObj:
-        html_text = html_text.replace(contents.get('href'), contents.get('href').split('/')[-1], 1)
+    #contentsObj = html_bs.select('#leftcolumn a')
+    #for contents in contentsObj:
+    #    html_text = html_text.replace(contents.get('href'), contents.get('href').split('/')[-1], 1)
 
 
     # 创建线程写入文件
@@ -110,6 +110,8 @@ def down_html(web_url, next_page_tag):
     next_page_obj = web_content.select(next_page_tag)
     if next_page_obj:
         next_page_url = next_page_obj[0].get('href')
+        if re.match('/',next_page_url):
+            next_page_url = home_url + next_page_url
         down_html(next_page_url, next_page_tag)
     else:
         for thread in thread_list:
