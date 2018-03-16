@@ -86,10 +86,10 @@ def down_html(web_url, next_page_tag):
             jsBox.write(requests.get(js_src).content)
 
 
-    # 处理目录
-    #contentsObj = html_bs.select('#leftcolumn a')
-    #for contents in contentsObj:
-    #    html_text = html_text.replace(contents.get('href'), contents.get('href').split('/')[-1], 1)
+    # 处理目录url
+    contentsObj = html_bs.select('#leftcolumn a')
+    for contents in contentsObj:
+       html_text = html_text.replace(contents.get('href'), contents.get('href').split('/')[-1], 1)
 
 
     # 创建线程写入文件
@@ -106,8 +106,7 @@ def down_html(web_url, next_page_tag):
     index = int(index) + 1
 
     # 下一页
-    web_content = bs4.BeautifulSoup(html_text, 'html.parser')
-    next_page_obj = web_content.select(next_page_tag)
+    next_page_obj = html_bs.select(next_page_tag)
     if next_page_obj:
         next_page_url = next_page_obj[0].get('href')
         if re.match('/',next_page_url):
@@ -133,7 +132,7 @@ def create_html_file(file_name, content):
 
 
 
-# 生成目录（这个不好，舍弃不用）
+# 生成目录文件（暂时不用）
 # def create_contents():
 #     index_file = open(os.path.join('.','html','index.html'),'w')
 #     html_dir = os.path.join('.','html')
