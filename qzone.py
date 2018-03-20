@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 # coding=utf-8
 
-
 import os, sys, time, requests, math
-
+from urllib import request
 from selenium import webdriver
-
 
 print('开始执行程序')
 qq = '842276675'
@@ -35,7 +33,7 @@ lists = driver.find_elements_by_xpath("//a[@class='c-tx2 js-album-desc-a']")
 album_number = len(lists)
 print(len(lists))
 time.sleep(2)
-index = 7
+index = 1
 while index < album_number:
     driver.switch_to.default_content()
     js = "var q=document.documentElement.scrollTop=0"
@@ -80,12 +78,29 @@ while index < album_number:
     driver.execute_script(js)
     time.sleep(2)
 
+    #处理图片列表
     driver.switch_to.frame('app_canvas_frame')
-    images = driver.find_elements_by_xpath("//ul[@class='list j-pl-photolist-ul']/li")
-    
+    try:
+        images = driver.find_elements_by_xpath("//ul[@class='list j-pl-photolist-ul']/li//img")
+        print(images)
+        if images != []:
+            print(driver.find_element_by_xpath("//div[@class='tit-view j-pl-quickedit-wrap']/a"))
+            album_name = driver.find_element_by_xpath("//div[@class='tit-view j-pl-quickedit-wrap']/a").get_attribute('title')
+            print(album_name)
+            os.mkdir('./QQ相册/'+album_name,0o777)
+            img_index = 1
+            for img in images:
+                print(img)
+                img_src = str(img.get_attribute('src'))
+                big_img_src = img_src.replace('/m/','/b/')
+                img_path = './QQ相册/'+album_name+'/'+str(img_index)+'.jpg'
 
+                request.urlretrieve(big_img_src, img_path)
 
+                img_index += 1
 
+    finally:
+        print('跳过该相册的下载')
 
     print('返回相册列表页面')
     driver.back()
